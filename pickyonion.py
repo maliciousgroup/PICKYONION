@@ -29,6 +29,7 @@ class PICKYONION(object):
 
         # Web server variables
         self.tor_webserver_port = None
+        self.tor_webserver_dir = None
 
         if not self._is_running():
             self.tor_process = self._start_tor()
@@ -92,6 +93,14 @@ class PICKYONION(object):
         if port:
             self.tor_webserver_port = int(port)
 
+    def get_webserver_dir(self):
+        if self.tor_webserver_dir:
+            return(self.tor_webserver_dir)
+
+    def set_webserver_dir(self, path=None):
+        if path:
+            self.tor_webserver_dir = path
+
     def reset_identity(self):
         self.tor_controller.signal(stem.Signal.NEWNYM)
         sleep(self.tor_controller.get_newnym_wait())
@@ -105,12 +114,14 @@ class PICKYONION(object):
             take_ownership=True,
             init_msg_handler=self.tor_messages, )
 
-    def _start_webserver(self, path):
+    def _start_webserver(self):
         try:
-            if path:
-                os.chdir(path)
+            if self.tor_webserver_dir:
+                os.chdir(self.tor_webserver_dir)
         except OSError:
             os.getcwd()
+        except:
+            os.chdir("/tmp")
 
         httpd = SocketServer.TCPServer(("localhost", self.get_webserver_port()), SimpleHTTPServer.SimpleHTTPRequestHandler)
         th = threading.Thread(target=httpd.serve_forever)
@@ -121,7 +132,7 @@ class PICKYONION(object):
         self.tor_hidden_dir = os.path.join(self.tor_controller.get_conf('DataDirectory', '/tmp'), name)
         if ws:
             local_port = self.get_webserver_port()
-            self._start_webserver(local_port)
+            self._start_webserver()
 
         r = self.tor_controller.create_ephemeral_hidden_service({listener_port: local_port}, await_publication=True)
         if r.service_id:
