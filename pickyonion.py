@@ -39,7 +39,6 @@ class PICKYONION(object):
             self.tor_process = self._start_tor()
 
         self.tor_controller = Controller.from_port(port=self.tor_ctrl_port)
-        self.logger.debug("Attempting to authenticate with TOR Controller")
         self.tor_controller.authenticate(self.tor_ctrl_pass)
         self.tor_data_dir = self.tor_controller.get_conf('DataDirectory')
         self.tor_session = requests.Session()
