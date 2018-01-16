@@ -10,10 +10,13 @@ tor_proxy_port = 9050
 tor_control_port = 9051
 tor_control_pass = "password"
 
+hidden_port = 8080
+local_port = 1337
+
 with PICKYONION(tor_proxy_port, tor_control_port, tor_control_pass) as picky:
 
-    picky.set_hidden_service_port(8080)
-    picky.set_local_service_port(1337)
+    picky.set_hidden_service_port(hidden_port)
+    picky.set_local_service_port(local_port)
 
     addr = picky.start_hidden_service(picky.get_hidden_service_port(), picky.get_local_service_port(), "random_name", False)
     
