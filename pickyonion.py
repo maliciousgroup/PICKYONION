@@ -38,7 +38,6 @@ class PICKYONION(object):
         if not self._is_running():
             self.tor_process = self._start_tor()
 
-        self.logger.debug("Connecting to TOR Controller via port %s" % (str(self.tor_ctrl_port)))
         self.tor_controller = Controller.from_port(port=self.tor_ctrl_port)
         self.logger.debug("Attempting to authenticate with TOR Controller")
         self.tor_controller.authenticate(self.tor_ctrl_pass)
@@ -48,6 +47,13 @@ class PICKYONION(object):
             'http': 'socks5://localhost:%d' % (self.tor_socks_port),
             'https': 'socks5://localhost:%d' % (self.tor_socks_port),
         })
+
+    def close(self):
+        try:
+            self.tor_session.close()
+            self.tor_controller.close()
+        except: pass
+        if self.tor_process: self.tor_process.terminate()
 
     def tor_messages(self, line):
         pass
