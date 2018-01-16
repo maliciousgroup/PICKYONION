@@ -33,14 +33,8 @@ class PICKYONION(object):
 
         # Setup custom logging handler
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.DEBUG)
-
-        logger_handler = logging.FileHandler('debug.log')
-        logger_handler.setLevel(logging.DEBUG)
-        logger_handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
-
-        self.logger.addHandler(logger_handler)
-
+        self.logger = logging.basicConfig(filename='debug.log', level=logging.DEBUG)
+        
         if not self._is_running():
             self.tor_process = self._start_tor()
 
