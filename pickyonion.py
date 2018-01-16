@@ -4,7 +4,6 @@ import SimpleHTTPServer
 import SocketServer
 import threading
 import requests
-import logging
 import stem
 import os
 from time import sleep
@@ -30,10 +29,6 @@ class PICKYONION(object):
 
         # Web server variables
         self.tor_webserver_port = None
-
-        # Setup custom logging handler
-        self.logger = logging.getLogger(__name__)
-        self.logger = logging.basicConfig(filename='debug.log', level=logging.DEBUG)
 
         if not self._is_running():
             self.tor_process = self._start_tor()
@@ -66,52 +61,42 @@ class PICKYONION(object):
             return self.tor_controller.get_info("traffic/written")
 
     def get_tor_socks_port(self):
-        self.logger.debug("get_tor_socks_port function called!")
         if self.tor_socks_port:
             return self.tor_socks_port
 
     def set_tor_socks_port(self, port):
-        self.logger.debug("set_tor_socks_port function called!")
         if port:
             self.tor_socks_port = int(port)
 
     def get_tor_ctrl_port(self):
-        self.logger.debug("get_tor_ctrl_port function called!")
         if self.tor_ctrl_port:
             return self.tor_ctrl_port
 
     def set_tor_ctrl_port(self, port):
-        self.logger.debug("set_tor_ctrl_port function called!")
         if port:
             self.tor_ctrl_port = int(port)
 
     def get_tor_ctrl_pass(self):
-        self.logger.debug("get_tor_ctrl_pass function called!")
         if self.tor_ctrl_pass:
             return self.tor_ctrl_pass
 
     def set_tor_ctrl_pass(self, password):
-        self.logger.debug("set_tor_ctrl_pass function called!")
         if password:
             self.tor_ctrl_pass = str(password)
 
     def get_webserver_port(self):
-        self.logger.debug("get_webserver_port function called!")
         if self.tor_webserver_port:
             return self.tor_webserver_port
 
     def set_webserver_port(self, port=8080):
-        self.logger.debug("set_tor_webserver_port function called!")
         if port:
             self.tor_webserver_port = int(port)
 
     def reset_identity(self):
-        self.logger.debug("Attempting to reset the tor circuit/identity.")
         self.tor_controller.signal(stem.Signal.NEWNYM)
         sleep(self.tor_controller.get_newnym_wait())
 
     def _start_tor(self):
-        self.logger.debug("Attempting to start the TOR instance.")
         return launch_tor_with_config(
             config={
                 'SocksPort': str(self.tor_socks_port),
@@ -127,7 +112,6 @@ class PICKYONION(object):
         except OSError:
             os.getcwd()
 
-        self.logger.debug("Attempting to start webserver on port %d" % int(self.get_webserver_port()))
         httpd = SocketServer.TCPServer(("localhost", self.get_webserver_port()), SimpleHTTPServer.SimpleHTTPRequestHandler)
         th = threading.Thread(target=httpd.serve_forever)
         th.daemon = True
