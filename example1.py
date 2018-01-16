@@ -4,7 +4,7 @@
 # Example: Send an GET/POST request over TOR
 #
 
-from onion_requests import PICKYONION
+from pickyonion import PICKYONION
 
 tor_proxy_port = 9050
 tor_control_port = 9051
