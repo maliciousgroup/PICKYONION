@@ -1,9 +1,9 @@
 # Project: PICKY ONION
 
-**PICKY ONION** is a private red team python library focused on leveraging [TOR](https://www.torproject.org/) to establish secure communication and on-demand hidden service hosting.
+**PICKY ONION** is a private red team python library focused on leveraging [TOR](https://www.torproject.org/) to establish secure communication and on-demand hidden service hosting. This module is part of a larger red team toolkit, and will be updated accordingly.
 
-# Dependencies
-This library relies on the [TOR](https://www.torproject.org/) project to run, so you need to make sure the **tor** package is installed on your operating system. Depending on your distribution here are some examples:
+## Dependencies
+This library relies on the [TOR](https://www.torproject.org/) project to run, so you need to make sure the **tor** package is installed on your operating system. Depending on your distribution here are some **tor** install examples:
 
 **Debian/Ubuntu**
 
@@ -24,8 +24,41 @@ This library relies on the [TOR](https://www.torproject.org/) project to run, so
     $ brew install tor
 
 
+----------
 
-# Installation
+
+**NOTE:** After you have **tor** installed on your operating system, go ahead and generate a hashed password for control port access. Once the hash is generated, you should replace the default hash within the torrc file usually located in **/etc/tor/torrc**
+
+***Generate tor hash***
+
+    $ which tor
+    /usr/bin/tor
+	
+	$ /usr/bin/tor --hash-password "my_password"
+	16:DEC49716237141026094D404249D069ABBCB508637A999B4C2E51FEC7E
+
+ 
+----------
+
+
+ ***Add/Modify torrc configuration file***
+ 
+
+    # Setup TOR Socks Port
+    SOCKSPort 9050
+    
+	# Setup TOR Control Port
+	ControlPort 9051
+	
+	# Enable Cookie Authentication
+	CookieAuthentication 1
+	
+	# Setup Hashed Password for Control Port access
+	HashedControlPassword 16:E03DA2324594D70660A5140DEAC8CA49A64C93FE212BC2B9DCEE5A277A
+
+Once those configuration options are set within the torrc configuration file, restart **tor** service and it should be ready to use with **PICKY ONION**.
+
+## Installation
 To install the library you will need to clone the git repository with **authorization** from the blackhatstodays security team.
 
     $ git clone https://github.com/blackhatstoday/pickyonion
@@ -41,7 +74,7 @@ To install the library you will need to clone the git repository with **authoriz
 
 
 
-# Examples
+## Examples
 
 **Example 1**:  (Making a GET request via TOR socket)
 
@@ -108,5 +141,4 @@ To install the library you will need to clone the git repository with **authoriz
 	        except KeyboardInterrupt:
 	            print "Exiting with keyboard interrupt.."
 	            picky.close()
-
 
