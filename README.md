@@ -34,7 +34,7 @@ This library relies on the [TOR](https://www.torproject.org/) project to run, so
     $ which tor
     /usr/bin/tor
 	
-	$ /usr/bin/tor --hash-password "my_password"
+	$ /usr/bin/tor --hash-password "password"
 	16:DEC49716237141026094D404249D069ABBCB508637A999B4C2E51FEC7E
 
  
